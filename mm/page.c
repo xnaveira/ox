@@ -93,6 +93,7 @@ typedef int bool;
 #define false 0
 #define true  1
 #endif
+#include <ox/sleep.h>
 
 #define PAGE_BITS       32768 // 4096 * 8
 #define BITS_PER_BYTE   8
@@ -253,7 +254,9 @@ void mem_init()
     register mem_map_t *mem;
 
     MEM_SIZE   = mem_size();
+    printk("XAVI - MEM_SIZE: %x\n",MEM_SIZE);
     NR_PAGES   = MEM_SIZE / PAGE_SIZE;
+    printk("XAVI - NR_PAGES: %x\n",NR_PAGES);
     NR_MEM_MAP = ((NR_PAGES / BITS_PER_BYTE) / PAGE_SIZE) + (((NR_PAGES / BITS_PER_BYTE) % PAGE_SIZE) ? 1 : 0);
     NR_PAGE_TABLES = NR_PAGES / PAGE_TABLE_SIZE;
     PAGE_TABLE_BYTES = NR_PAGE_TABLES * PAGE_SIZE;
@@ -338,6 +341,7 @@ void mem_init()
 
 #ifdef _ENABLE_PAGING
     printk("loading KERNEL_PAGE_TABLEs\n");
+    local_sleep(200);
 
     page_limit = END_KMEM / PAGE_SIZE;
     printk(" page_limit [%d]\n",page_limit);
@@ -467,6 +471,8 @@ void mem_set_read_only(void *addr, unsigned nr_pages)
 {
     unsigned page_start = (((unsigned)(char *)addr) / PAGE_SIZE);
     unsigned i = 0, page = 0;
+    printk("XAVI - addr: %x\n",addr);
+    printk("XAVI - page_start: %x\n",page_start);
     asm_disable_interrupt();
     if(nr_pages > NR_PAGES) {
         printk("mem_set_read_only:: warning nr_pages > NR_PAGES setting to NR_PAGES\n");
@@ -476,9 +482,11 @@ void mem_set_read_only(void *addr, unsigned nr_pages)
         page = KERNEL_PAGE_TABLE[i];
         // Clear the second bit which makes this 
         // page read-only.
+        printk("XAVI - Page before: %x\n",page);
         PT_SET_READ_ONLY(page);
+        printk("XAVI - Page after: %x\n",page);
         KERNEL_PAGE_TABLE[i] = page;
-        page_flush_tlb(i * PAGE_SIZE);
+        page_flush_tlb_386(i * PAGE_SIZE);
     }
     asm_enable_interrupt();
 }
