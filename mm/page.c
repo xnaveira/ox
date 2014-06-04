@@ -486,8 +486,8 @@ void mem_set_read_only(void *addr, unsigned nr_pages)
         PT_SET_READ_ONLY(page);
         printk("XAVI - Page after: %x\n",page);
         KERNEL_PAGE_TABLE[i] = page;
-        page_flush_tlb_386(i * PAGE_SIZE);
     }
+    page_flush_tlb_386(i);
     asm_enable_interrupt();
 }
 
