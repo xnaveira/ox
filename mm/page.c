@@ -478,8 +478,9 @@ void mem_set_read_only(void *addr, unsigned nr_pages)
         // page read-only.
         PT_SET_READ_ONLY(page);
         KERNEL_PAGE_TABLE[i] = page;
-        page_flush_tlb(i * PAGE_SIZE);
     }
+    page_flush_tlb_386(KERNEL_PAGE_TABLE);
+    /*page_flush_tlb_386(KERNEL_PAGE_DIR);*/
     asm_enable_interrupt();
 }
 
@@ -496,8 +497,9 @@ void mem_unset_read_only(void *addr, unsigned nr_pages)
         page = KERNEL_PAGE_TABLE[i];
         PT_SET_ATTRIB(page, PTE_READ_WRITE);
         KERNEL_PAGE_TABLE[i] = page;
-        page_flush_tlb(i * PAGE_SIZE);
     }
+    page_flush_tlb_386(KERNEL_PAGE_TABLE);
+    /*page_flush_tlb_386(KERNEL_PAGE_DIR);*/
     asm_enable_interrupt();
 }
 

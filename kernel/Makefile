@@ -14,7 +14,8 @@ LD	=	/usr/bin/ld
 LDFLAGS =	-s -x -M
 IFLAGS  =       -I. -I.. -I../include -I../include/ox -I../include/sys -I../include/platform
 #CFLAGS  =	$(IFLAGS) -nostdinc -Wall -O -fstrength-reduce -fomit-frame-pointer -m32 -fpic
-CFLAGS  =	$(IFLAGS) -nostdinc -Wall -m32 -nostdlib -nostartfiles -nodefaultlibs -fomit-frame-pointer
+#_TEST_PAGE_ALLOCCFLAGS  =	$(IFLAGS) -nostdinc -Wall -m32 -nostdlib -nostartfiles -nodefaultlibs -fomit-frame-pointer
+CFLAGS  =	$(IFLAGS) -D _TEST_PAGE_ALLOC -nostdinc -Wall -m32 -nostdlib -nostartfiles -nodefaultlibs -fomit-frame-pointer
 PLATFORM=	./platform
 SYSCALL =	./syscall
 .c.s:

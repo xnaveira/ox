@@ -135,7 +135,7 @@ int ox_main (int argc, char **argv)
    // Try setting read-only on kernel page.
    addr = page_alloc(1);
    printk(" ADDR = [%d]\n",addr);
-   // mem_set_read_only(addr,1);
+   mem_set_read_only(addr,1);
    printk("Should crash here\n");
    *addr = '2';
    printk("Didn't crash\n");
